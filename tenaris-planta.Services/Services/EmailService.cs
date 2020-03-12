@@ -1,23 +1,32 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using tenaris_planta.Core.DTO;
 using tenaris_planta.Data.DAL;
 
 namespace tenaris_planta.Services
 {
     public class EmailService
     {
-        private EmailModel _emailModel;
-        
-        public List<object> Get(Nullable<int> id = null)
-        
-        
-        
+        public static object Get(string id = null)
         {
-            _emailModel = new EmailModel();
-            return _emailModel.Get();
+            return EmailModel.Get(id);
+        }
+
+        public static object Update(string id, JObject updateObject)
+        {
+            if (updateObject != null && id != null)
+            {
+                if (updateObject["doc"] != null)
+                {
+                    return EmailModel.Update(id, updateObject);
+                }
+            }
+            return null;
         }
     }
 }
