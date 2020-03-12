@@ -12,7 +12,7 @@ using System.Net.Http;
 using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
-using tenaris_planta.Core.DTO;
+using tenaris_planta.Core;
 
 namespace tenaris_planta.Data.DAL
 {
@@ -44,6 +44,47 @@ namespace tenaris_planta.Data.DAL
             {
                 rtn = reader.ReadToEnd();
             }
+
+            return JObject.Parse(rtn);
+        }
+
+        public static JObject GetPriority()
+        {
+            string html = string.Empty;
+            string url = ConfigurationManager.AppSettings["ElasticsearchServer"] + @"/emails/_search/";
+
+            EmailFilterDTO emailFilter = new EmailFilterDTO("alta media baja", "or");
+
+            ServicePointManager.ServerCertificateValidationCallback = new
+            RemoteCertificateValidationCallback
+            (
+               delegate { return true; }
+            );
+
+            // Request data
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.Headers.Add("Authorization", ConfigurationManager.AppSettings["ElasticsearchBasicAuthBase64"]);
+
+            // POST data
+            string jsonDataStr = JsonConvert.SerializeObject(emailFilter).Replace("_operator", "operator");
+            byte[] data = Encoding.ASCII.GetBytes(jsonDataStr);
+            request.ContentType = "application/json";
+            request.ContentLength = data.Length;
+
+            Stream requestStream = request.GetRequestStream();
+            requestStream.Write(data, 0, data.Length);
+            requestStream.Close();
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream responseStream = response.GetResponseStream();
+            StreamReader streamReader = new StreamReader(responseStream, Encoding.Default);
+
+            string rtn = streamReader.ReadToEnd();
+            streamReader.Close();
+            responseStream.Close();
+
+            response.Close();
 
             return JObject.Parse(rtn);
         }

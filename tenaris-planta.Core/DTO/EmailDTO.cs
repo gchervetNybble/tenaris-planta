@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tenaris_planta.Core.DTO
+namespace tenaris_planta.Core
 {
     public class EmailDTO
     {

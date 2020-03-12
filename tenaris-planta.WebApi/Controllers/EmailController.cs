@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
-using tenaris_planta.Core.DTO;
 using tenaris_planta.Services;
 
 namespace tenaris_planta.WebApi.Controllers
@@ -20,6 +19,14 @@ namespace tenaris_planta.WebApi.Controllers
         public object Get(string id = null)
         {
             return EmailService.Get(id);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/email/GetPriority")]
+        public object GetPriority()
+        {
+            return EmailService.GetPriority();
         }
 
         [HttpPost]
