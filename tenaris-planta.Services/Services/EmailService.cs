@@ -14,7 +14,7 @@ namespace tenaris_planta.Services
     {
         public static object Get(string id = null)
         {
-            return EmailModel.Get(id);
+            return ((JObject)EmailModel.Get(id))["hits"];
         }
 
         public static object Update(string id, JObject updateObject)
