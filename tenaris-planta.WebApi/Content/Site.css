@@ -1,17 +1,19 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿.logo-img {
+    height: 30px;
+    margin-top: -7px;
+    margin-left: 100px;
+}
+.delete-button-custom {
+    font-size: 17px;
+    cursor: pointer;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.priority {
+    float: left;
+    font-size: 17px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.priority-text {
+    float: left;
+    padding-left: 10px;
 }

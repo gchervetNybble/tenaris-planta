@@ -174,9 +174,14 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\img\logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\bootstrap-table-en-US.js" />
+    <Content Include="Scripts\bootstrap-table-es-ES.js" />
+    <Content Include="Scripts\bootstrap-table-filter-control.min.js" />
+    <Content Include="Scripts\bootstrap-table-i18n-enhance.js" />
     <Content Include="Scripts\bootstrap-table-page-jump-to.min.js" />
     <Content Include="Scripts\bootstrap-table.js" />
     <Content Include="Scripts\bootstrap.js" />
