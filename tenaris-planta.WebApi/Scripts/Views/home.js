@@ -13,8 +13,8 @@ $(function () {
                 { 'field': 'priority', 'value': 'Prioridad' },
                 { 'field': 'action', 'value': 'Acción' },
                 { 'field': 'date', 'value': 'Fecha' },
-                { 'field': 'delete-modal-header', 'value': 'Se necesita confirmación' },
-                { 'field': 'delete-modal-body', 'value': '¿Marcar como solucionado el inconveniente en el equipo *{0}*?' },
+                { 'field': 'delete-modal-header', 'value': 'Marcar como solucionado' },
+                { 'field': 'delete-modal-body', 'value': '¿Marcar como solucionado el inconveniente en el equipo {0}?' },
                 { 'field': 'delete-modal-confirm', 'value': 'Confirmar' },
                 { 'field': 'delete-modal-cancel', 'value': 'Cancelar' }
             ]
@@ -26,8 +26,8 @@ $(function () {
                 { 'field': 'priority', 'value': 'Priority' },
                 { 'field': 'action', 'value': 'Action' },
                 { 'field': 'date', 'value': 'Date' },
-                { 'field': 'delete-modal-header', 'value': 'Confirmation needed' },
-                { 'field': 'delete-modal-body', 'value': 'Confirmation needed to close event {0}.' },
+                { 'field': 'delete-modal-header', 'value': 'Mark as resolved' },
+                { 'field': 'delete-modal-body', 'value': 'Mark the issue with system {0} as resolved?.' },
                 { 'field': 'delete-modal-confirm', 'value': 'Confirm' },
                 { 'field': 'delete-modal-cancel', 'value': 'Cancel' }
             ]
