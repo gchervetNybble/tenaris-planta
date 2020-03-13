@@ -14,7 +14,7 @@ $(function () {
                 { 'field': 'action', 'value': 'Acción' },
                 { 'field': 'date', 'value': 'Fecha' },
                 { 'field': 'delete-modal-header', 'value': 'Se necesita confirmación' },
-                { 'field': 'delete-modal-body', 'value': 'Para dar de baja el evento {0} es necesario confirmar.' },
+                { 'field': 'delete-modal-body', 'value': '¿Marcar como solucionado el inconveniente en el equipo *{0}*?' },
                 { 'field': 'delete-modal-confirm', 'value': 'Confirmar' },
                 { 'field': 'delete-modal-cancel', 'value': 'Cancelar' }
             ]
@@ -52,21 +52,22 @@ $(function () {
 
     $('#confirmationModal').on('show.bs.modal', (event) => {
         var button = $(event.relatedTarget);
-        var eventId = button.data('whatever');
+        var eventSystemName = button.data('whatever');
+        var eventId = $(event.relatedTarget).attr('rowId')
         var localeFieldValues = localeArray.find(fieldEl => fieldEl.code === defaultLocale);
 
         var modal = $(this);
-        modal.find('.modal-title').text(localeFieldValues.values.find(fieldEl => fieldEl.field === 'delete-modal-header').value.replace('{0}', eventId));
-        modal.find('.modal-body').text(localeFieldValues.values.find(fieldEl => fieldEl.field === 'delete-modal-body').value.replace('{0}', eventId));
+        modal.find('.modal-title').text(localeFieldValues.values.find(fieldEl => fieldEl.field === 'delete-modal-header').value.replace('{0}', eventSystemName));
+        modal.find('.modal-body').text(localeFieldValues.values.find(fieldEl => fieldEl.field === 'delete-modal-body').value.replace('{0}', eventSystemName));
         modal.find('.delete-confirm').text(localeFieldValues.values.find(fieldEl => fieldEl.field === 'delete-modal-confirm').value);
         modal.find('.delete-cancel').text(localeFieldValues.values.find(fieldEl => fieldEl.field === 'delete-modal-cancel').value);
         modal.find('.delete-confirm').attr('rowId', eventId);
         modal.find('.modal-body input').val(eventId);
     })
 
-    $(document).on("click", ".delete-confirm", () => {
-        debugger;
-        var rowId = $(this).attr("rowId");
+    $(document).on("click", ".delete-confirm", (event) => {
+        
+        var rowId = $(event.target).attr("rowId");
         var rowItem = backEndData.hits.find(rowEl => rowEl._id === rowId);
         if (rowItem) {
 
@@ -87,31 +88,43 @@ $(function () {
                     $table.bootstrapTable('load', updatedGridDate);
                 }
             });
+            $('#confirmationModal').modal('hide');
         }
     });
 
     getData = () => {
         $.get("https://localhost:44398/api/email/GetPriority", (data) => {
             if (data) {
+                gridData = [];
                 backEndData = data;
                 data.hits.forEach(email => {
 
-                    var priority = '';
+                    var priority = {};
                     var priorityClass = '';
                     var timestamp = undefined;
 
                     email._source.tags.forEach(tagElement => {
                         if (tagElement.toLocaleLowerCase() === 'alta' || tagElement.toLocaleLowerCase() === 'media' || tagElement.toLocaleLowerCase() === 'baja') {
-                            priority = tagElement;
-                            if (tagElement.toLocaleLowerCase() === 'alta') priorityClass = 'text-danger';
-                            if (tagElement.toLocaleLowerCase() === 'media') priorityClass = 'text-warning';
-                            if (tagElement.toLocaleLowerCase() === 'baja') priorityClass = 'text-success';
+                            priority = { 'name': tagElement, 'value': 0 };
+                            if (tagElement.toLocaleLowerCase() === 'alta') {
+                                priorityClass = 'text-danger';
+                                priority.value = 1;
+                            }
+                            if (tagElement.toLocaleLowerCase() === 'media') {
+                                priorityClass = 'text-warning';
+                                priority.value = 2;
+                            }
+                            if (tagElement.toLocaleLowerCase() === 'baja') {
+                                priorityClass = 'text-success';
+                                priority.value = 1;
+                            }
                         }
                         timestamp = new Date(email._source["@timestamp"])
                     })
+                    var systemName = getSystemName(email._source.subject, email._source.message);
                     gridData.push({
                         'id': email._id,
-                        'name': getSystemName(email._source.subject, email._source.message),
+                        'name': systemName,
                         'timestamp': timestamp,
                         'date':
                             (('0' + timestamp.getDate()).slice(-2)) + '/' +
@@ -120,12 +133,13 @@ $(function () {
                             (('0' + timestamp.getHours()).slice(-2)) + ':' +
                             (('0' + timestamp.getMinutes()).slice(-2)) + ':' +
                             (('0' + timestamp.getSeconds()).slice(-2)),
-                        'priority': '<i class="fas fa-arrow-circle-up ' + priorityClass + ' priority"></i><p class="priority-text">' + priority + '</p>',
-                        'action': '<i class="fas fa-times-circle text-danger delete-button-custom" rowId="' + email._id + '" data-whatever="' + email._id + '" data-toggle="modal" data-target="#confirmationModal"></i>'
+                        'priority': '<i class="fas fa-arrow-circle-up ' + priorityClass + ' priority"></i><p class="priority-text">' + priority.name + '</p>',
+                        'action': '<i class="fas fa-times-circle text-danger delete-button-custom" rowId="' + email._id + '" data-whatever="' + systemName + '" data-toggle="modal" data-target="#confirmationModal"></i>'
                     });
                 });
 
-                $table.bootstrapTable({ data: gridData, locale: defaultLocale })
+                $table.bootstrapTable({ data: gridData, locale: defaultLocale });
+                $table.bootstrapTable('load', gridData);
             }
         });
     }
@@ -146,7 +160,7 @@ $(function () {
     }
 
     refresh = () => {
-        debugger;
+        
         getData();
     }
 
