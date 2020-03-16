@@ -93,7 +93,7 @@ $(function () {
     });
 
     getData = () => {
-        $.get("https://localhost:44398/api/email/GetPriority", (data) => {
+        $.get("http://localhost:44398/api/email/GetPriority", (data) => {
             if (data) {
                 gridData = [];
                 backEndData = data;
@@ -108,7 +108,7 @@ $(function () {
                             priority = { 'name': tagElement, 'value': 0 };
                             if (tagElement.toLocaleLowerCase() === 'alta') {
                                 priorityClass = 'text-danger';
-                                priority.value = 1;
+                                priority.value = 3;
                             }
                             if (tagElement.toLocaleLowerCase() === 'media') {
                                 priorityClass = 'text-warning';
@@ -133,7 +133,7 @@ $(function () {
                             (('0' + timestamp.getHours()).slice(-2)) + ':' +
                             (('0' + timestamp.getMinutes()).slice(-2)) + ':' +
                             (('0' + timestamp.getSeconds()).slice(-2)),
-                        'priority': '<i class="fas fa-arrow-circle-up ' + priorityClass + ' priority"></i><p class="priority-text">' + priority.name + '</p>',
+                        'priority': '<p style="display: none">' + priority.value + '</p><i class="fas fa-arrow-circle-up ' + priorityClass + ' priority"></i><p class="priority-text" value=' + priority.value +'>' + priority.name + '</p>',
                         'action': '<i class="fas fa-times-circle text-danger delete-button-custom" rowId="' + email._id + '" data-whatever="' + systemName + '" data-toggle="modal" data-target="#confirmationModal"></i>'
                     });
                 });

@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace tenaris_planta.WebApi.Controllers
 {
-    public class HomeController : Controller
+    public class ChartController : Controller
     {
         public ActionResult Index()
         {
